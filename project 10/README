@@ -1,0 +1,25 @@
+
+
+                                  Project 10 - Jack Analyser
+                           ----------------------------------------
+
+Files
+---------------
+
+main.py - The main script. Translates all the *.jack files under the script args[1] location,
+		 and creates .xml file from it
+JackTokeniser.py - Contains the class with the functions to parse the file string into tokens
+JackAnalyzer.py - Contains the class with the functions to compile the file tokens into their correct meanning
+
+
+implementation:
+---------------
+Run over the files, and for each file we:
+1. parse its text
+2. run over the text and extract tokens. each token is a tuple in form of ('type', 'string_token', '/type')
+3. run over the tokens end collect into a list,  with addind the inform tokens at beginning and end of every non-termunal role
+
+After parsing all the files we output their token lists into coresponding files with the sufix .xml
+
+
+

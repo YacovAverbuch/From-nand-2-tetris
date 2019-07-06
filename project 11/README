@@ -1,0 +1,26 @@
+
+
+                                  Project 11 - Jack Compilation
+                           ----------------------------------------
+
+
+Files
+---------------
+Main.py- The main script. Translates all the *.jack files under the script args, and creates
+                   vm files which contains the same program/ programs of each jack file.
+JackAnalyzer.py- reads the output of the Tokenizer, compile the code and generates the vm cose lines.
+JackTokenizer.py- same as last project. create xml code lines that contains labels for each token.
+SymbolTable.py- This class responsible of mapping the variables of the scopes.
+                The Class's scope and the current Method/Function/Constructor's scope.
+
+
+implementation:
+---------------
+Run over the files, and for each file we
+1. the main class parse its lines
+2. the tokenizer creates xml lines with labels for the tokens
+3. the Analyzer reads the xml lines and generates vm code accordinely
+4. the main class writes those lines into a file with the same name of the file, with .vm, at the same directory.
+
+
+

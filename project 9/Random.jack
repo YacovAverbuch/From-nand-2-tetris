@@ -1,0 +1,33 @@
+// File name: /09/Snake/Random.jack
+
+/**
+ * A static class that generates random numbers
+ */
+
+class Random {
+
+    static int seed;
+
+
+    /** Define the seed */
+    function void set_seed(String new_seed) {
+        let seed = String.intValue(new_seed);
+        return;
+    }
+
+
+
+    /** return new seed between a : b.  */
+	function int next_between(int a, int b) {
+		var int range;
+		let range = b - a;
+		let seed = 7919 + Math.multiply(17, seed);
+		while (seed > range){
+		let seed = seed - range;
+		}
+		let seed = seed + a;
+	return seed;
+	}
+}
+
+

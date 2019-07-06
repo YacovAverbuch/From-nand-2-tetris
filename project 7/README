@@ -1,0 +1,17 @@
+
+
+                           Project 7 - Virtual Machine (Arithmetic)
+                           ----------------------------------------
+
+
+VM_Arithmetic_translator.py- The main script. Translates all the *.vm files under the script args, and creates
+                   asm file which contains the same program/ programs of each vm file.
+
+Functions.py - Contains the get_* functions that returns the asm commends according the vm opperation commends.
+                   (fonction's command; call, function, return)
+
+
+
+
+
+

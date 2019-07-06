@@ -1,0 +1,29 @@
+
+
+                           Project 8 - Virtual Machine (Control)
+                           ----------------------------------------
+
+
+VMtranslator.py- The main script. Translates all the *.vm files under the script args, and creates
+                   asm file which contains the same program/ programs of each vm file.
+Basic_Commands.py- Contains the get_* functions that returns the asm commends according the vm opperation commends.
+                   (those from project 7, and labals, goto, commands)
+Functions_Commands.py- Contains the get_* functions that returns the asm commends according the vm opperation commends.
+                   (fonction's command; call, function, return)
+
+
+implementation:
+---------------
+Run over the files, and for each file we
+1. parse its lines
+2. run over the lines, replaces empty and comment lines with 'None'
+3. run over the lines,
+    - translate the opperation (and the segment mamory  when the opperation is push/pop),
+    - translate the labels
+    - translate the function's action
+4. create a list of asm code segments.
+5. writing those lines into a file with the same name of the file or dir, with .asm. (if dir name- the file contains
+  s the asm lines of all the vm files in that directory).
+
+
+

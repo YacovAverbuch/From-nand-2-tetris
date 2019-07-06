@@ -1,0 +1,225 @@
+// File name: /09/Snake/Snake.jack
+
+/**
+ * A graphical snake
+ */
+
+class Snake {
+
+
+    // the current direction of the snake. 6, 4, 8, 2, for right, left, up, dow
+	field int direction;
+	field int snake_size;
+	// an array of ints. each piont of the snake body represent by 2 coordinates (x, y)
+	field Array locations_array;
+	// the current location in the array that store the heads\tails coordinates
+    field int head_loc;
+	field int tail_loc;
+	field int locations_array_length;             
+
+    /** Constructs a new snake*/
+    constructor Snake new() {
+
+	    let direction = 6;
+		let snake_size = 6;
+		// allocate space for array of 80 ints, wich is 40 pairs (x, y)
+		let locations_array = Array.new(800);
+		let locations_array_length = 400;
+		
+		let head_loc = 5;  // the 5'th (x, y) pair in the array. snake init is 6 pixel long 
+		let tail_loc = 0;
+ 
+		do first_insert_to_array(locations_array, 256, 128);
+		do first_draw(256, 128);
+        return this;
+    }
+
+
+    /** D */
+    method void first_insert_to_array(Array locations_array, int x_init, int y_init) {
+		var int i;
+		let i = 0;
+		while (i < snake_size){
+			let locations_array[i + i]  = (x_init + (i * 8));
+			let locations_array[(i + i) + 1]  = y_init;
+			let i = i + 1;
+		} 
+        return;
+    }
+
+
+    /** Deallocates the Snake's memory. */
+    method void first_draw(int x_init, int y_init) {
+		var int i;
+		let i = 0;
+		do Screen.setColor(true);
+		while (i < snake_size){
+			do Screen.drawRectangle(((x_init + 1) + (i * 8)), y_init + 1, ((x_init + 6) + (i * 8)), y_init + 6); 
+			let i = i + 1;
+		}
+        return;
+    }
+
+    /** Deallocates the Snake's memory. */
+    method void dispose() {
+		do Array.dispose(locations_array);
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Move the snake. return -1 if faild*/
+    method int move_snake(boolean to_increas) {
+
+		var int tail_x;
+		var int tail_y;
+		var int head_x;
+		var int head_y;
+
+		var int new_head_x;
+		var int new_head_y;
+
+		let tail_x = locations_array[tail_loc + tail_loc];
+		let tail_y = locations_array[(tail_loc + tail_loc) + 1];
+		let head_x = locations_array[head_loc + head_loc];
+		let head_y = locations_array[(head_loc + head_loc) + 1];
+
+		if (to_increas){
+			let snake_size = snake_size + 1;
+			if (snake_size > locations_array_length){
+				return -1;
+			}
+		}
+		if (~ to_increas){
+			do Screen.setColor(false);
+			do Screen.drawRectangle(tail_x + 1, tail_y + 1, tail_x + 6, tail_y + 6); // claer the snake tail
+		}
+
+
+		if (direction = 6){
+			let new_head_x = head_x + 8;
+			let new_head_y = head_y;
+		}
+		else {
+		if (direction = 8){
+			let new_head_x = head_x;
+			let new_head_y = head_y - 8; }
+		else {
+		if (direction = 2){
+			let new_head_x = head_x;
+			let new_head_y = head_y + 8; }
+		else { 
+		if (direction = 4){
+			let new_head_x = head_x - 8;
+			let new_head_y = head_y; }
+		}}}
+
+
+		do Screen.setColor(true);
+	    do Screen.drawRectangle(new_head_x + 1, new_head_y + 1, new_head_x + 6, new_head_y + 6);
+
+		let head_loc = head_loc + 1;
+		if (head_loc > (locations_array_length - 1)){
+			let head_loc = 0;
+		}
+		if (~ to_increas){
+			let tail_loc = tail_loc + 1;
+			if (tail_loc > (locations_array_length - 1)){
+				let tail_loc = 0;
+			}
+		}
+
+		let locations_array[head_loc + head_loc] = new_head_x;
+		let locations_array[(head_loc + head_loc) + 1] = new_head_y;
+
+	    return 1;
+    }
+
+
+    /** Returns the snake's x coordinate of the head. */
+    method int getHead_X() {
+        return locations_array[head_loc + head_loc];
+    }
+
+    /** Returns the snake's y coordinate of the head. */
+    method int getHead_Y() {
+        return locations_array[(head_loc + head_loc) + 1];
+    }
+
+	
+	/** sets the snake's direction. */
+    method void set_direction(int new_direction) {
+		let direction = new_direction;
+        return;
+    }
+
+
+	
+	/** get direction. */
+    method int get_direction() {
+        return direction;
+    }
+
+
+
+     /** Checks if a point is free */
+        method boolean is_free_point(int new_x, int new_y) {
+
+    		var int cur_tail_x;
+    		var int cur_tail_y;
+    		var int i;
+			var int cur_check;
+
+
+    		let cur_check = tail_loc;
+			let i = 0;
+
+    		while (i < snake_size){    // we have to check on the array in snake_size locations 
+    		let cur_tail_x = locations_array[cur_check + cur_check];
+    		let cur_tail_y = locations_array[(cur_check + cur_check) + 1];
+    			if ((cur_tail_x = new_x) & (cur_tail_y = new_y)){ return false; }
+				let cur_check = cur_check + 1;
+    			if (cur_check > (locations_array_length - 1)){
+    				let cur_check = 0;
+    			}
+    			let i = i + 1;
+    		}
+            return true;
+        }
+
+
+
+        /** Checks for colision between the snake's head and its tail. */
+        method boolean has_colision() {
+    		var int new_head_x;
+    		var int new_head_y;
+
+    		var int cur_tail_x;
+    		var int cur_tail_y;
+
+    		var int i;
+			var int cur_check;
+
+    		let new_head_x = locations_array[head_loc + head_loc];
+    		let new_head_y = locations_array[(head_loc + head_loc) + 1];
+
+    		let cur_check = tail_loc;
+			let i = 0;
+
+    		while (i < (snake_size - 1)){ 
+				let cur_tail_x = locations_array[cur_check + cur_check];
+				let cur_tail_y = locations_array[(cur_check + cur_check) + 1];
+					if ((cur_tail_x = new_head_x) & (cur_tail_y = new_head_y)){ return true; }
+					let cur_check = cur_check + 1;
+					if (cur_check > (locations_array_length - 1)){
+						let cur_check = 0;
+    				}
+    			let i = i + 1;
+    		}
+            return false;
+        }
+
+}
+
+
+
+

@@ -1,0 +1,175 @@
+// File name: /09/Snake/SnakeGame.jack
+
+/**
+ * Represents a Snake game.
+ */
+class SnakeGame {
+  
+    field Snake snake;
+	field Food food;
+	
+    field int x_right_wall;
+    field int x_left_wall;
+    field int y_up_wall;
+    field int y_down_wall;
+
+    field boolean exit;       // true when the game is over
+    field int score;          // the current score
+	field int level;
+	field boolean to_exelarate;
+	field boolean to_increase_snake;
+
+    /** Constructs a new Snake game. */
+    constructor SnakeGame new() {
+
+		let x_right_wall = 504;
+        let x_left_wall = 160;
+        let y_up_wall = 0;
+        let y_down_wall = 248;
+
+        let snake = Snake.new();
+
+		let food = Food.new(0, 0);
+		do food.move(false, snake);      // find new location for food
+
+		let to_exelarate = false;
+		let to_increase_snake = false;
+	    let exit = false;
+	    let score = 0;
+		let level = 1;
+
+        return this;
+    }
+
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do snake.dispose();
+        do food.dispose();
+		do Memory.deAlloc(this);
+        return;
+    }
+	
+	/** checks if the snake eats the food. If so, incerases the current score and makes new food. */
+	method void check_eat_food() {
+		if((snake.getHead_X() = food.getLeft()) & (snake.getHead_Y() = food.getTop())){
+			let to_increase_snake = true;
+			do food.move(true, snake);
+			do food.setLife(60);
+			let score = score + (1 + level);
+			do SnakeScreen.set_score(score);
+			let level = Math.sqrt(Math.divide(score, 4) + 1);	
+			do SnakeScreen.set_level(level);
+		}
+		return;
+	}
+
+
+    /** Starts the game, and handles inputs from the user that control
+     *  the snake. */
+    method void run() {
+        var char key;
+		var char last_key;
+		var boolean has_crash;
+		var int delay;
+
+		let key = 1;
+		let has_crash = false;
+
+        while (~exit) {
+			do food.decreaseLife();
+			if (food.getLife() = 0){
+				do food.move(false, snake);
+				do food.setLife(60);
+			}
+
+			let last_key = key;
+			let delay = 500 - (30 * level);
+			if (to_exelarate) { 
+				let delay = 100;
+				let to_exelarate = false;
+			}
+
+			while (delay > 0){
+				do Sys.wait(10);
+				let key = Keyboard.keyPressed(); 
+				if ((key > 100) & (~(key = last_key))) {
+					let delay = 0;
+					do Sys.wait(10);
+				}
+				let delay = delay - 10;
+			}
+
+			do do_key(key);
+
+            let has_crash = one_move();
+			if (has_crash) {
+				do end_game("   CRASHHH");
+				return;
+			}
+        }
+	    if (exit) {
+			do end_game("   EXIT");
+	    }
+        return;
+    }
+	
+
+	/** a single move of the snake */
+	method boolean one_move(){
+            do snake.move_snake(to_increase_snake);
+			let to_increase_snake = false;
+			if (snake.has_colision()) { return true; }
+			else{
+				if (snake.getHead_X() = x_right_wall | (snake.getHead_X() = x_left_wall)) { return true;} 
+				else {
+					if ((snake.getHead_Y() = y_up_wall) | (snake.getHead_Y() = y_down_wall)) { return true;}
+				}
+			}
+			do check_eat_food(); 
+		return false;
+	}
+
+
+	/**   */
+	method void do_key(char key){
+            if (key = 132 & (~ (snake.get_direction() = 4))) { do snake.set_direction(6); } 
+			else{
+				if (key = 131 & (~ (snake.get_direction() = 2))) { do snake.set_direction(8); }
+				else{
+					if (key = 130 & (~ (snake.get_direction() = 6))) { do snake.set_direction(4); }
+					else{
+						if (key = 133 & (~ (snake.get_direction() = 8))) { do snake.set_direction(2); }
+						else{
+							if (key = 32) { let to_exelarate = true; }
+							else{
+								if (key = 140) { let exit = true; }  
+							}
+						}
+					}
+				}					
+			}
+		return;
+	}
+
+
+	/**  ends the game */
+	method void end_game(String message){
+			do Output.moveCursor(18,0);
+	        do Output.printString(message);
+			do Sys.wait(2000);	        
+			do Output.moveCursor(20,0);
+			do Output.printString("   GAME OVER");
+			
+		return;
+	}
+}
+
+
+
+
+
+
+
+
+

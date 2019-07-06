@@ -1,0 +1,105 @@
+// File name: /09/Snake/Food.jack
+
+/**
+ * A graphical food.
+ */
+
+class Food {
+
+    field int x, y;               // the food's screen location (in pixels)
+    field int lengthx, lengthy;   // distance of last destination (in pixels)
+
+    field int life;            // used for straight line movement computation  
+       
+
+    /** Constructs a new food with the given initial location and wall locations. */
+    constructor Food new(int Ax, int Ay) {
+	    let x = Ax;		
+	    let y = Ay;
+		let life = 60;
+        do show();
+        return this;
+    }
+	
+	
+
+    /** Deallocates the food's memory. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Shows the food. */
+    method void show() {
+        do Screen.setColor(true);
+        do draw();
+        return;
+    }
+
+    /** Hides the food. */
+    method void remove() {
+        do Screen.setColor(false);
+	    do draw();
+        return;
+    }
+
+    /** Draws the food. */
+    method void draw() {
+	    do Screen.drawRectangle(x + 1, y + 1, x + 6, y + 6);
+	    return;
+    }
+	
+	/** move the food to its new location*/
+	method void move(boolean is_eaten, Snake snake){
+
+		var int new_x;
+		var int new_y;
+
+		if (~ is_eaten) { do remove(); }
+
+		let new_x = 168 + (Random.next_between(0, 41) * 8);
+		let new_y = 8 + (Random.next_between(0, 29) * 8);
+
+		while (~ snake.is_free_point(new_x, new_y)){
+			let new_x = 168 + (Random.next_between(0, 41) * 8);
+			let new_y = 8 + (Random.next_between(0, 29) * 8);
+		}
+
+		let x = new_x;
+		let y = new_y;
+		do show();
+		return;
+	}
+
+    /** Returns the food's left edge. */
+    method int getLeft() {
+        return x;
+    }
+
+	
+	/** Returns the food's top edge. */
+    method int getTop() {
+        return y;
+    }
+
+	
+	/** Returns the food's life */
+    method int getLife() {
+        return life;
+    }
+	
+	/** set the food's life by to the new given int. */
+    method void setLife(int newLife) {
+        let life = newLife;
+		return;
+    }
+	
+	/** decrease the food's life by 1. */
+    method void decreaseLife() {
+        let life = life - 1;
+		do SnakeScreen.set_food_timer(life);
+		return;
+    }
+
+
+}

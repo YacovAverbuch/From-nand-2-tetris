@@ -1,0 +1,25 @@
+
+
+                           Project 9 - High Level Programming
+                           -----------------------------------
+Files
+---------------
+
+Main.jack - Initialize the screen and run the game.
+SmakeGame.jack - This class is responsible of the Snake game flow.
+SnakeScreen.jack- This class contains the information that printed to the screen for user during the game.
+Snake.jack- A graphical snake.
+Food.jack- A graphical food.
+Random.jack- A static class that generates random numbers.
+
+
+implementation:
+---------------
+1. prints to the screen the instructions of the game and how to control the snake
+2. gets input from the user for the random class
+3. runs a loop in wich:
+ - a food is presented (for 60 loops, and than appears in a different location).
+ - the snake moves every loop. if the user presses one of the arrows, the snake chanfes the direction of movement.
+ - if the snake 'eats' the food, it gets points.
+ - if the snake crashes the walls ot itself, it looses
+4. game over when snake looses or when the user presses esc.

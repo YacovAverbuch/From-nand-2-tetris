@@ -1,0 +1,81 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * This library provides two services: direct access to the computer's main
+ * memory (RAM), and allocation and recycling of memory blocks. The Hack RAM
+ * consists of 32,768 words, each holding a 16-bit binary number.
+ */ 
+class Memory {
+    static Array ram;
+    static Array heap;
+    static int freeListBase;
+    static int freeListEnd;
+ 
+
+    /** Initializes the class. */
+    function void init() {
+        let ram = 0;
+        let heap = 2048;
+        let heap[0] = -1;  // there is no more fregments after this fregment
+        let heap[1] = 14333;
+        let freeListBase = 0;  // in haep terms - which maens, the cur free point is 2048
+        let freeListEnd = 0;   // this is the heap location of last object in the list. it alwais point to -1
+		return;
+    }
+
+    /** Returns the RAM value at the given address. */
+    function int peek(int address) {
+        return ram[address];
+    }
+
+    /** Sets the RAM value at the given address to the given value. */
+    function void poke(int address, int value) {
+        let ram[address] = value;
+		return;
+    }
+
+    /** Finds an available RAM block of the given size and returns
+     *  a reference to its base address. */
+    function int alloc(int size){
+        var int curSegment;  // repesent the base address on the heap (0 is RAM 2048) of the cur segment
+        var int lastSegment;  // the lest segment base address
+		var int returnAddres;  // in RAM terms. 2100 is heap[52]
+        let curSegment = freeListBase;
+		
+        while(true){
+			if (heap[curSegment + 1] > (size + 1)){
+                // alloc space at the end of the block and set the curSegment
+				let returnAddres = 2048 + curSegment + 2 + heap[curSegment + 1] - size;
+				let ram[returnAddres - 1] = size;
+				
+                let heap[curSegment + 1] = heap[curSegment + 1] - (size + 2);
+                // we don't care about the allocated space pointer. it for use only after dealloc
+				
+                return returnAddres;
+            }
+			
+            // did not allocate
+            if (curSegment = freeListEnd){
+                return -1;  // ERROR: there is no more space
+            }
+            let lastSegment = curSegment;
+			// we know this isn't the last segment in the list
+            let curSegment = heap[curSegment];
+        }
+		return -1;
+    }
+
+    /** De-allocates the given object (cast as an array) by making
+     *  it available for future allocations. */
+    function void deAlloc(Array object) {
+        let heap[freeListEnd] = object - 2 - 2048;
+        let freeListEnd = object - 2 - 2048;
+		return;
+    }
+}
+
+
+

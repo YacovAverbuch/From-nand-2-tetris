@@ -1,0 +1,89 @@
+// File name: /09/Snake/SnakeScreen.jack
+
+/**
+ * The information that printed to the screen during the game
+ */
+
+
+class SnakeScreen {
+
+    /** Print the first screen */
+    function String print_first_screen() {
+		var int user_seed;  	
+		do Screen.clearScreen();
+
+		do Output.moveCursor(3, 6);
+		do Output.printString("WELCOME TO THE SNAKE GAME...");
+		do Output.moveCursor(6, 6);
+		do Output.printString("USE THE ARROWS TO MOVE THE SNAKE,");
+		do Output.moveCursor(8, 6);
+		do Output.printString("USE BACKSPASE TO EXELARETE THE SNAKE");
+		do Output.moveCursor(10, 6);
+		do Output.printString("USE ESC TO EXIT");
+
+
+		do Output.moveCursor(15, 6);
+		do Output.printString("PLEASE ENTER YOUR NICKNAME,");
+
+		do Output.moveCursor(17, 6);
+		let user_seed = Keyboard.readLine("AND PRESS ENTER: ");
+
+		return user_seed;
+    }
+
+
+
+    /** Init the screen */
+    function void print_main_screen() {
+
+ 		do Screen.clearScreen();
+
+		do Screen.setColor(true);
+		do Screen.drawRectangle(160, 0, 511, 3);
+		do Screen.drawRectangle(160, 0, 163, 255);
+		do Screen.drawRectangle(160, 252, 511, 255);
+		do Screen.drawRectangle(508, 0, 511, 255);
+
+
+		do Output.moveCursor(5, 0);
+		do Output.printString("   LEVEL [1]");
+
+		do Output.moveCursor(7, 0);
+		do Output.printString("   SCORE [0]");
+
+		do Output.moveCursor(11, 0);
+		do Output.printString("   FOOD TIMER: 50");
+		return;
+    }
+
+
+    /** Increase the level presented on the screen */
+    function void set_level(int new_level) { 
+		do Output.moveCursor(5, 10);
+		do Output.printInt(new_level);
+		do Output.printString("]");
+		return;
+	}
+
+
+    /** Increase the score presented on the screen */
+    function void set_score(int new_score) { 
+		do Output.moveCursor(7, 10);
+		do Output.printInt(new_score);
+		do Output.printString("]");
+		return;
+	}
+
+    /** Decrease the time left for the food until it disappears */
+    function void set_food_timer(int new_time) { 
+		do Output.moveCursor(11, 16);
+		do Output.backSpace();
+		do Output.backSpace();
+		do Output.printInt(new_time);
+		return;
+	}
+}
+
+
+
+

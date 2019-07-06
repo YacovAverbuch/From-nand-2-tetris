@@ -1,0 +1,21 @@
+// MAIN
+
+
+class Main {
+
+    /** Initializes a Snake game and starts running it. */
+    function void main() {
+        var SnakeGame game;
+		var String nickName;
+		let nickName =  SnakeScreen.print_first_screen();
+
+		do Random.set_seed(nickName);
+		do SnakeScreen.print_main_screen();
+
+        let game = SnakeGame.new();
+
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}

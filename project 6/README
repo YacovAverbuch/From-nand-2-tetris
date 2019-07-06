@@ -1,0 +1,22 @@
+
+
+                           Project 6 - Assembler
+                           -----------------------------
+
+
+Assembler.py - translates all the *.asm files under the script args, and creates
+'binary' file - a file that contain only '0'/'1'
+
+
+
+implementation:
+---------------
+The scricp runs over the files, and for each file 
+1. parse its lines 
+2. init its symbols dictionary 
+3. run over the lines, collecting the labels and each line didnt contain A\C command, replaces with 'None'
+4. create a list of 'binary' code segments, 16-bit wide from the lines which are not 'None'
+5. printing those lines to a file with the same name, with .hack suffix
+ 
+
+
